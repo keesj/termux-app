@@ -5,11 +5,16 @@ import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.DrawFilter;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.telecom.Call;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -745,12 +750,33 @@ public final class TerminalView extends View {
         }
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         if (mEmulator == null) {
             canvas.drawColor(0XFF000000);
         } else {
-            mRenderer.render(mEmulator, canvas, mTopRow, mSelY1, mSelY2, mSelX1, mSelX2);
+            Bitmap b = Bitmap.createBitmap(canvas.getWidth() , canvas.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(b);
+
+
+
+            float scale = 0.2f;
+
+            //render into the bitmap
+            mRenderer.render(mEmulator, c, mTopRow, mSelY1, mSelY2, mSelX1, mSelX2);
+
+            Matrix matrix = new Matrix();
+            matrix.postScale(scale,scale);
+
+            Bitmap resizedBitmap = Bitmap.createBitmap(b, 0, 0,
+                canvas.getWidth(), canvas.getHeight(), matrix, true);
+            int down=60;
+            int inc = +10;
+
+            canvas.drawBitmap(resizedBitmap, (canvas.getWidth() /4) - (canvas.getWidth() * scale) /2  ,down + (canvas.getHeight() /2) - (canvas.getHeight() * scale) /2,null);
+            canvas.drawBitmap(resizedBitmap, inc + (canvas.getWidth() * 3 /4) - (canvas.getWidth() * scale) /2,down + (canvas.getHeight() /2) - (canvas.getHeight() * scale) /2  ,null);
+
 
             if (mIsSelectingText) {
                 final int gripHandleWidth = mLeftSelectionHandle.getIntrinsicWidth();
