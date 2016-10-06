@@ -27,4 +27,4 @@ addons:
     notification_email: github@keesj.dds.nl
     build_command_prepend: "./gradlew clean"
     build_command: "./gradlew assemble"
-    branch_pattern: coverity_scan
+    branch_pattern: cardboard_hack
