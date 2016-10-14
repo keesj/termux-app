@@ -75,6 +75,8 @@ public final class TermuxKeyListener implements TerminalKeyListener {
                 mActivity.getDrawer().closeDrawers();
             } else if (unicodeChar == 'f'/* full screen */) {
                 mActivity.toggleImmersive();
+            } else if (unicodeChar == 't'/* cardboard screen */) {
+                mActivity.toggleCardBoard();
             } else if (unicodeChar == 'k'/* keyboard */) {
                 InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);

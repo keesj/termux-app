@@ -20,6 +20,7 @@ import java.util.Properties;
 
 final class TermuxPreferences {
 
+
     @IntDef({BELL_VIBRATE, BELL_BEEP, BELL_IGNORE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface AsciiBellBehaviour {
@@ -33,12 +34,14 @@ final class TermuxPreferences {
     private static final int MAX_FONTSIZE = 256;
 
     private static final String FULLSCREEN_KEY = "fullscreen";
+    private static final String CARDBOARDVIEW_KEY = "cardboardview";
     private static final String SHOW_EXTRA_KEYS_KEY = "show_extra_keys";
     private static final String FONTSIZE_KEY = "fontsize";
     private static final String CURRENT_SESSION_KEY = "current_session";
     private static final String SHOW_WELCOME_DIALOG_KEY = "intro_dialog";
 
     private boolean mFullScreen;
+    private boolean mCardBoardView;
     private int mFontSize;
 
     @AsciiBellBehaviour
@@ -58,6 +61,7 @@ final class TermuxPreferences {
         MIN_FONTSIZE = (int) (4f * dipInPixels);
 
         mFullScreen = prefs.getBoolean(FULLSCREEN_KEY, false);
+        mCardBoardView = prefs.getBoolean(CARDBOARDVIEW_KEY, false);
         mShowExtraKeys = prefs.getBoolean(SHOW_EXTRA_KEYS_KEY, false);
 
         // http://www.google.com/design/spec/style/typography.html#typography-line-height
@@ -80,6 +84,15 @@ final class TermuxPreferences {
     void setFullScreen(Context context, boolean newValue) {
         mFullScreen = newValue;
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(FULLSCREEN_KEY, newValue).apply();
+    }
+
+    boolean isCardBoardView() {
+        return mCardBoardView;
+    }
+
+    public void setCardBoardView(Context context, boolean newValue) {
+        mCardBoardView = newValue;
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(CARDBOARDVIEW_KEY, newValue).apply();
     }
 
     boolean isShowExtraKeys() {

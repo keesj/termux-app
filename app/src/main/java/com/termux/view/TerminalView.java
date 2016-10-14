@@ -56,6 +56,8 @@ public final class TerminalView extends View {
 
     TerminalKeyListener mOnKeyListener;
 
+    boolean mCardBoardView;
+
     /** The top row of text to display. Ranges from -activeTranscriptRows to 0. */
     int mTopRow;
 
@@ -756,27 +758,31 @@ public final class TerminalView extends View {
         if (mEmulator == null) {
             canvas.drawColor(0XFF000000);
         } else {
-            Bitmap b = Bitmap.createBitmap(canvas.getWidth() , canvas.getHeight(), Bitmap.Config.ARGB_8888);
-            Canvas c = new Canvas(b);
+
+            if (mCardBoardView) {
+                Bitmap b = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas c = new Canvas(b);
 
 
+                float scale = 0.2f;
 
-            float scale = 0.2f;
+                //render into the bitmap
+                mRenderer.render(mEmulator, c, mTopRow, mSelY1, mSelY2, mSelX1, mSelX2);
 
-            //render into the bitmap
-            mRenderer.render(mEmulator, c, mTopRow, mSelY1, mSelY2, mSelX1, mSelX2);
+                Matrix matrix = new Matrix();
+                matrix.postScale(scale, scale);
 
-            Matrix matrix = new Matrix();
-            matrix.postScale(scale,scale);
+                Bitmap resizedBitmap = Bitmap.createBitmap(b, 0, 0,
+                    canvas.getWidth(), canvas.getHeight(), matrix, true);
+                int down = 60;
+                int inc = +10;
 
-            Bitmap resizedBitmap = Bitmap.createBitmap(b, 0, 0,
-                canvas.getWidth(), canvas.getHeight(), matrix, true);
-            int down=60;
-            int inc = +10;
+                canvas.drawBitmap(resizedBitmap, (canvas.getWidth() / 4) - (canvas.getWidth() * scale) / 2, down + (canvas.getHeight() / 2) - (canvas.getHeight() * scale) / 2, null);
+                canvas.drawBitmap(resizedBitmap, inc + (canvas.getWidth() * 3 / 4) - (canvas.getWidth() * scale) / 2, down + (canvas.getHeight() / 2) - (canvas.getHeight() * scale) / 2, null);
+            } else {
+                mRenderer.render(mEmulator, canvas, mTopRow, mSelY1, mSelY2, mSelX1, mSelX2);
 
-            canvas.drawBitmap(resizedBitmap, (canvas.getWidth() /4) - (canvas.getWidth() * scale) /2  ,down + (canvas.getHeight() /2) - (canvas.getHeight() * scale) /2,null);
-            canvas.drawBitmap(resizedBitmap, inc + (canvas.getWidth() * 3 /4) - (canvas.getWidth() * scale) /2,down + (canvas.getHeight() /2) - (canvas.getHeight() * scale) /2  ,null);
-
+            }
 
             if (mIsSelectingText) {
                 final int gripHandleWidth = mLeftSelectionHandle.getIntrinsicWidth();
@@ -924,6 +930,10 @@ public final class TerminalView extends View {
 
     public TerminalSession getCurrentSession() {
         return mTermSession;
+    }
+
+    public void setCardBoard(boolean value){
+            mCardBoardView = value;
     }
 
 }

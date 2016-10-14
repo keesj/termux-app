@@ -216,6 +216,7 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
         mTerminalView.setOnKeyListener(new TermuxKeyListener(this));
 
         mTerminalView.setTextSize(mSettings.getFontSize());
+        mTerminalView.setCardBoard(mSettings.isCardBoardView());
         mFullScreenHelper.setImmersive(mSettings.isFullScreen());
         mTerminalView.requestFocus();
 
@@ -869,4 +870,9 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
         }
     }
 
+    public void toggleCardBoard() {
+            boolean newValue = !mSettings.isCardBoardView();
+            mSettings.setCardBoardView(this, newValue);
+            mTerminalView.setCardBoard(newValue);
+    }
 }
